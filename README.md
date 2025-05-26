@@ -8,15 +8,9 @@ This is a simple demonstration project showing how to implement CI/CD with GitHu
 - `styles.css` - Styling for the webpage
 - `.github/workflows/` - Contains GitHub Actions workflow files
 - `package.json` - Node.js dependencies and scripts
-- `requirements.txt` - Python dependencies
 - `.stylelintrc.json` - Stylelint configuration
 
 ## Dependencies
-
-### Python Dependencies
-```bash
-pip install -r requirements.txt
-```
 
 ### Node.js Dependencies
 ```bash
@@ -37,16 +31,17 @@ npm install
 
 You can use any of these methods to run the website locally:
 
-1. **Using Python (Recommended)**:
-   ```bash
-   python -m http.server 8000
-   ```
-   Then open your browser and visit: `http://localhost:8000`
-
-2. **Using Node.js**:
+1. **Using Node.js (Recommended)**:
    ```bash
    npm start
    ```
+   Then open your browser and visit: `http://localhost:8080`
+
+2. **Using Python**:
+   ```bash
+   python -m http.server 8000
+   ```
+   Then visit: `http://localhost:8000`
 
 3. **Using PHP**:
    ```bash
@@ -56,7 +51,7 @@ You can use any of these methods to run the website locally:
 ### Stopping the Local Server
 
 1. **Windows**:
-   - Find the process using port 8000:
+   - Find the process using port 8000/8080:
      ```bash
      netstat -ano | findstr :8000
      ```
@@ -75,6 +70,14 @@ You can use any of these methods to run the website locally:
 
 ### Development Scripts
 
+- **Run All Linters**:
+  ```bash
+  npm run lint
+  ```
+- **Validate HTML**:
+  ```bash
+  npm run lint:html
+  ```
 - **Lint CSS**:
   ```bash
   npm run lint:css
@@ -86,9 +89,11 @@ You can use any of these methods to run the website locally:
 
 ### Troubleshooting
 
-- If port 8000 is already in use, try a different port:
+- If port 8000/8080 is already in use, try a different port:
   ```bash
-  python -m http.server 8080
+  python -m http.server 8081
+  # or for Node.js
+  npx http-server -p 8081
   ```
 - If you see "Address already in use", make sure to stop any existing servers first
 
@@ -97,14 +102,17 @@ You can use any of these methods to run the website locally:
 1. Clone the repository
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
    npm install
    ```
 3. Make your changes to the HTML or CSS files
 4. Test locally using the steps above
-5. Commit and push to the main branch
-6. GitHub Actions will automatically deploy your changes
-7. Wait a few minutes and check your GitHub Pages URL
+5. Run linters to check your changes:
+   ```bash
+   npm run lint
+   ```
+6. Commit and push to the main branch
+7. GitHub Actions will automatically deploy your changes
+8. Wait a few minutes and check your GitHub Pages URL
 
 ## Features
 

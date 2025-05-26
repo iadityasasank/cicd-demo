@@ -31,16 +31,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-          
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -50,13 +40,8 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
         
-      - name: Validate HTML
-        run: |
-          echo "Validating HTML files..."
-          html-validator --file index.html --verbose
-        
-      - name: Validate CSS
-        run: npm run lint:css
+      - name: Run all linters
+        run: npm run lint
 
   # Test stage
   test:

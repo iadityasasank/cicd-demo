@@ -1,1 +1,2 @@
-html-validator-cli>=1.0.0 
+# Python packages for development
+# Currently no Python packages required 
