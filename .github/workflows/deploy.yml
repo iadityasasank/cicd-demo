@@ -43,14 +43,25 @@ jobs:
         run: |
           echo "Validating HTML files..."
           html-validator --file index.html --verbose
-          
-      - name: Install CSS validator
-        run: npm install -g css-validator
+
+      - name: Install Stylelint
+        run: |
+          npm init -y
+          npm install --save-dev stylelint stylelint-config-standard
+          echo "{
+            \"extends\": \"stylelint-config-standard\",
+            \"rules\": {
+              \"custom-property-no-missing-var-function\": null,
+              \"property-no-vendor-prefix\": null,
+              \"value-no-vendor-prefix\": null,
+              \"font-family-no-missing-generic-family-keyword\": null
+            }
+          }" > .stylelintrc.json
         
       - name: Validate CSS
         run: |
-          echo "Validating CSS files..."
-          css-validator styles.css
+          echo "Validating CSS files with Stylelint..."
+          npx stylelint "**/*.css"
 
   # Test stage
   test:
