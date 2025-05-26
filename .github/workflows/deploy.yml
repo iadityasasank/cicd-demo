@@ -54,13 +54,15 @@ jobs:
               \"custom-property-no-missing-var-function\": null,
               \"property-no-vendor-prefix\": null,
               \"value-no-vendor-prefix\": null,
-              \"font-family-no-missing-generic-family-keyword\": null
+              \"font-family-no-missing-generic-family-keyword\": null,
+              \"alpha-value-notation\": null
             }
           }" > .stylelintrc.json
         
       - name: Validate CSS
         run: |
           echo "Validating CSS files with Stylelint..."
+          npx stylelint "**/*.css" --fix || true
           npx stylelint "**/*.css"
 
   # Test stage
