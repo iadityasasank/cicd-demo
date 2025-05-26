@@ -6,7 +6,7 @@ This is a simple demonstration project showing how to implement CI/CD with GitHu
 
 - `index.html` - Main webpage
 - `styles.css` - Styling for the webpage
-- `.github/workflows/` - Contains GitHub Actions workflow files (to be added)
+- `.github/workflows/` - Contains GitHub Actions workflow files
 
 ## Setting Up GitHub Pages
 
@@ -18,26 +18,62 @@ This is a simple demonstration project showing how to implement CI/CD with GitHu
 
 ## Local Development
 
-To test the website locally, you can use any simple HTTP server. For example:
+### Starting the Local Server
 
-- Using Python:
-  ```bash
-  python -m http.server 8000
-  ```
-- Using Node.js:
-  ```bash
-  npx http-server
-  ```
+You can use any of these methods to run the website locally:
 
-Then open your browser and navigate to `http://localhost:8000`
+1. **Using Python (Recommended)**:
+   ```bash
+   python -m http.server 8000
+   ```
+   Then open your browser and visit: `http://localhost:8000`
+
+2. **Using Node.js**:
+   ```bash
+   npx http-server
+   ```
+
+3. **Using PHP**:
+   ```bash
+   php -S localhost:8000
+   ```
+
+### Stopping the Local Server
+
+1. **Windows**:
+   - Find the process using port 8000:
+     ```bash
+     netstat -ano | findstr :8000
+     ```
+   - Kill the process (replace PID with the number from above):
+     ```bash
+     taskkill /PID <PID> /F
+     ```
+   
+2. **Linux/Mac**:
+   - Press `Ctrl+C` in the terminal where the server is running
+   - Or find and kill the process:
+     ```bash
+     lsof -i :8000
+     kill -9 <PID>
+     ```
+
+### Troubleshooting
+
+- If port 8000 is already in use, try a different port:
+  ```bash
+  python -m http.server 8080
+  ```
+- If you see "Address already in use", make sure to stop any existing servers first
 
 ## Making Changes
 
 1. Clone the repository
 2. Make your changes to the HTML or CSS files
-3. Commit and push to the main branch
-4. GitHub Actions will automatically deploy your changes
-5. Wait a few minutes and check your GitHub Pages URL
+3. Test locally using the steps above
+4. Commit and push to the main branch
+5. GitHub Actions will automatically deploy your changes
+6. Wait a few minutes and check your GitHub Pages URL
 
 ## Features
 
@@ -45,6 +81,7 @@ Then open your browser and navigate to `http://localhost:8000`
 - ✨ Modern, responsive design
 - 🔍 Simple and clean code structure
 - 📱 Mobile-friendly layout
+- 🖥️ Easy local development setup
 
 ## Contributing
 
