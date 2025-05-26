@@ -7,6 +7,21 @@ This is a simple demonstration project showing how to implement CI/CD with GitHu
 - `index.html` - Main webpage
 - `styles.css` - Styling for the webpage
 - `.github/workflows/` - Contains GitHub Actions workflow files
+- `package.json` - Node.js dependencies and scripts
+- `requirements.txt` - Python dependencies
+- `.stylelintrc.json` - Stylelint configuration
+
+## Dependencies
+
+### Python Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Node.js Dependencies
+```bash
+npm install
+```
 
 ## Setting Up GitHub Pages
 
@@ -30,7 +45,7 @@ You can use any of these methods to run the website locally:
 
 2. **Using Node.js**:
    ```bash
-   npx http-server
+   npm start
    ```
 
 3. **Using PHP**:
@@ -58,6 +73,17 @@ You can use any of these methods to run the website locally:
      kill -9 <PID>
      ```
 
+### Development Scripts
+
+- **Lint CSS**:
+  ```bash
+  npm run lint:css
+  ```
+- **Fix CSS Issues**:
+  ```bash
+  npm run lint:css:fix
+  ```
+
 ### Troubleshooting
 
 - If port 8000 is already in use, try a different port:
@@ -69,11 +95,16 @@ You can use any of these methods to run the website locally:
 ## Making Changes
 
 1. Clone the repository
-2. Make your changes to the HTML or CSS files
-3. Test locally using the steps above
-4. Commit and push to the main branch
-5. GitHub Actions will automatically deploy your changes
-6. Wait a few minutes and check your GitHub Pages URL
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   npm install
+   ```
+3. Make your changes to the HTML or CSS files
+4. Test locally using the steps above
+5. Commit and push to the main branch
+6. GitHub Actions will automatically deploy your changes
+7. Wait a few minutes and check your GitHub Pages URL
 
 ## Features
 
@@ -82,6 +113,7 @@ You can use any of these methods to run the website locally:
 - 🔍 Simple and clean code structure
 - 📱 Mobile-friendly layout
 - 🖥️ Easy local development setup
+- 🧰 Comprehensive linting and validation
 
 ## Contributing
 

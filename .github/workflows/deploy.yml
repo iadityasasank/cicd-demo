@@ -31,39 +31,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
           
-      - name: Install HTML validator
-        run: npm install -g html-validator-cli
+      - name: Install Node.js dependencies
+        run: npm ci
         
       - name: Validate HTML
         run: |
           echo "Validating HTML files..."
           html-validator --file index.html --verbose
-
-      - name: Install Stylelint
-        run: |
-          npm init -y
-          npm install --save-dev stylelint stylelint-config-standard
-          echo "{
-            \"extends\": \"stylelint-config-standard\",
-            \"rules\": {
-              \"custom-property-no-missing-var-function\": null,
-              \"property-no-vendor-prefix\": null,
-              \"value-no-vendor-prefix\": null,
-              \"font-family-no-missing-generic-family-keyword\": null,
-              \"alpha-value-notation\": null
-            }
-          }" > .stylelintrc.json
         
       - name: Validate CSS
-        run: |
-          echo "Validating CSS files with Stylelint..."
-          npx stylelint "**/*.css" --fix || true
-          npx stylelint "**/*.css"
+        run: npm run lint:css
 
   # Test stage
   test:
@@ -100,18 +93,14 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
         with:
-          # Automatically create a .nojekyll file
           static_site_generator: "html"
           enablement: true
         
       - name: Build site
         run: |
           echo "Building site..."
-          # Create a _site directory for the built content
           mkdir -p _site
-          # Copy all files to _site directory
           cp -r index.html styles.css README.md _site/
-          # Create .nojekyll file to bypass Jekyll processing
           touch _site/.nojekyll
           
       - name: Upload artifact
@@ -124,7 +113,6 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
-    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -134,7 +122,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          # Enable the deployment
           enablement: true
 
   # Notification stage
