@@ -1,0 +1,130 @@
+name: Deploy to GitHub Pages
+
+# Defines when this workflow will run
+on:
+  # Trigger the workflow on push events but only for the main branch
+  push:
+    branches: [ "main" ]
+  # Trigger the workflow on pull request events but only for the main branch
+  pull_request:
+    branches: [ "main" ]
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+# Define permissions needed for GitHub Pages
+permissions:
+  contents: read  # Allows the workflow to read repository contents
+  pages: write    # Allows the workflow to deploy to GitHub Pages
+  id-token: write # Allows the workflow to verify the deployment
+
+# Ensure only one deployment happens at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Lint and validate stage
+  validate:
+    name: Lint and Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install HTML validator
+        run: npm install -g html-validator-cli
+        
+      - name: Validate HTML
+        run: |
+          echo "Validating HTML files..."
+          html-validator --file index.html --verbose
+          
+      - name: Install CSS validator
+        run: npm install -g css-validator
+        
+      - name: Validate CSS
+        run: |
+          echo "Validating CSS files..."
+          css-validator styles.css
+
+  # Test stage
+  test:
+    name: Run Tests
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Check file existence
+        run: |
+          echo "Checking required files..."
+          test -f index.html || exit 1
+          test -f styles.css || exit 1
+          test -f README.md || exit 1
+          
+      - name: Check HTML structure
+        run: |
+          echo "Checking HTML structure..."
+          grep -q "<title>" index.html || exit 1
+          grep -q "<body>" index.html || exit 1
+
+  # Build stage
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Build site
+        run: |
+          echo "Building site..."
+          # Add any build steps here if needed
+          # For static sites, we might just need to organize files
+          
+      - name: Create artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  # Deploy stage
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Notification stage
+  notify:
+    name: Send Notifications
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check deployment status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+            echo "Site is live at: ${{ needs.deploy.outputs.page_url }}"
+          else
+            echo "❌ Deployment failed!"
+            exit 1
+          fi 
